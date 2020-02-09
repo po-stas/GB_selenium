@@ -29,8 +29,8 @@ while True:
     # Next Page
     try:
         button = driver.find_element_by_class_name('sel-hits-button-next')
-        style = button.get_attribute('style')
-        if 'none' in style:
+        class_name = button.get_attribute('class')
+        if 'disabled' in class_name:
             print('End of List')
             break
         button.click()
