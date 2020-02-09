@@ -32,11 +32,24 @@ enter_password.click()
 # Wait for page will be ready
 letters_container = WebDriverWait(driver, 5).until(ec.visibility_of_element_located((By.CLASS_NAME, 'dataset__items')))
 letters_list = letters_container.find_elements_by_class_name('js-letter-list-item')
+
+letters = []
 for letter in letters_list:
     correspondent = letter.find_element_by_class_name('ll-crpt').text
     subject = letter.find_element_by_class_name('llc__subject').text
     snippet = letter.find_element_by_class_name('ll-sp__normal').text
-    print(f'{correspondent}: {subject} - {snippet}...')
+    date = letter.find_element_by_class_name('llc__item_date').text
+    link = letter.get_attribute('href')
+    letter_dic = {'corr': correspondent, 'sub': subject, 'date': date, 'snippet': snippet, 'link': link}
+    letters.append(letter_dic)
+
+# Go inside for get texts
+for letter in letters:
+    driver.get(letter['link'])
+    letter_body = WebDriverWait(driver, 5).until(ec.visibility_of_element_located((By.CLASS_NAME, 'letter-body__body-content')))
+    letter['text'] = letter_body.text
+
+    print(f'{letter["corr"]}: {letter["sub"]} - {letter["date"]}...{letter["text"]}')
 
 
 
